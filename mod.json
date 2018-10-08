@@ -14,8 +14,7 @@
 
   "Settings": {
     "PrefixesToIgnore": [
-      "CustomComponents [LOG]",
-      "Could not retrieve member Custom from type"
+      "CustomComponents [LOG]"
     ]
   }
 }
