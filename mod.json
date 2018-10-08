@@ -1,0 +1,21 @@
+{
+  "Name": "FuckYouLogShit",
+  "Enabled": true,
+
+  "Version": "1.0.2",
+
+  "Author": "janxious",
+  "Website": "https://github.com/janxious/FuckYouLogShit",
+
+  "DLL": "FuckYouLogShit.dll",
+  "DLLEntryPoint": "FuckYouLogShit.Core.Init",
+  "DependsOn": [],
+  "ConflictsWith": [],
+
+  "Settings": {
+    "PrefixesToIgnore": [
+      "CustomComponents [LOG]",
+      "Could not retrieve member Custom from type"
+    ]
+  }
+}
