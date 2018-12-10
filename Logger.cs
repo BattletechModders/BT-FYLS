@@ -15,6 +15,7 @@ namespace FuckYouLogShit
             {
                 writer.WriteLine($"{DateTime.Now} Cleaned Log");
                 writer.WriteLine(new string(c: '-', count: 80));
+                writer.WriteLine(VersionInfo.GetFormattedInfo());
             }
         }
 
