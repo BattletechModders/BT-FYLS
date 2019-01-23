@@ -76,6 +76,17 @@ namespace FuckYouLogShit
             return false;
         }
     }
+
+    [HarmonyPatch(typeof(UnityEngine.Debug), "Logger", MethodType.Getter)]
+    static class WhatAShitshow
+    {
+        public static bool Prefix()
+        {
+            
+            return false;
+        }
+    }
+    
     [HarmonyPatch(typeof(HBS.Logging.Logger), "HandleUnityLog", MethodType.Normal)]
     static class LogAttacher
     {
