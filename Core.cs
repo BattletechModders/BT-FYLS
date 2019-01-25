@@ -4,6 +4,7 @@ using Harmony;
 using HBS.Logging;
 using Newtonsoft.Json;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace FuckYouLogShit
 {
@@ -77,18 +78,20 @@ namespace FuckYouLogShit
         }
     }
 
-    [HarmonyPatch(typeof(UnityEngine.Debug), "Logger", MethodType.Getter)]
-    static class WhatAShitshow
+    [HarmonyPatch(typeof(UnityEngine.Debug), "logger", MethodType.Getter)]
+    public static class DebugLoggerAttacher
     {
-        public static bool Prefix()
+        public static ILogger DebugLog;
+        public static bool Prefix(ref ILogger __result)
         {
-            
+            if (DebugLog == null) DebugLog = new UnityEngine.Logger(new LoggerProxy(HBS.Logging.Logger.GetLogger("UnityEngine.Debug")));
+            __result = DebugLog;
             return false;
         }
     }
     
     [HarmonyPatch(typeof(HBS.Logging.Logger), "HandleUnityLog", MethodType.Normal)]
-    static class LogAttacher
+    public static class LogAttacher
     {
         //private static bool HaveLoggedDebugMessage = false;
 
@@ -108,6 +111,32 @@ namespace FuckYouLogShit
 //            }
 
             return false;
+        }
+    }
+
+    class LoggerProxy : ILogHandler
+    {
+        ILog hbslog;
+        public LoggerProxy(ILog hbslog)
+        {
+            this.hbslog = hbslog;
+        }
+
+        public void LogException(Exception exception, UnityEngine.Object context)
+        {
+            hbslog.LogException(exception, context);
+        }
+
+        static Dictionary<LogType, LogLevel> lmap = new Dictionary<LogType, LogLevel> {
+            { LogType.Log, LogLevel.Log},
+            { LogType.Assert, LogLevel.Log },
+            { LogType.Warning, LogLevel.Warning },
+            { LogType.Error, LogLevel.Error },
+            { LogType.Exception, LogLevel.Error }
+        };
+        public void LogFormat(LogType logType, UnityEngine.Object context, string format, params object[] args)
+        {
+            hbslog.LogAtLevel(lmap[logType], string.Format(format, args), context);
         }
     }
 }
