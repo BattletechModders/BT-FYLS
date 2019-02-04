@@ -6,30 +6,45 @@ namespace FuckYouLogShit
 {
     public static class Logger
     {
-        private static string LogFilePath    => $"{Core.ModDirectory}/../cleaned_output_log.txt";
-        private static string ModLogFilePath => $"{Core.ModDirectory}/{Core.ModName}.log";
+        private static string CleanLogFilePath => $"{Core.ModDirectory}/../cleaned_output_log.txt";
+        private static string FullLogFilePath  => $"{Core.ModDirectory}/../output_log.txt";
 
-        public static StreamWriter writer;
-        public static void InitDebugFile()
+        public static StreamWriter CleanWriter;
+        public static StreamWriter FullWriter;
+
+        public static void InitDebugFiles()
         {
-            writer = new StreamWriter(LogFilePath, false);
-            writer.AutoFlush = true;
-            writer.WriteLine($"{DateTime.Now} Cleaned Log");
-            writer.WriteLine(new string(c: '-', count: 80));
-            writer.WriteLine(VersionInfo.GetFormattedInfo());
+            CleanWriter = new StreamWriter(CleanLogFilePath, false);
+            CleanWriter.AutoFlush = true;
+            CleanWriter.WriteLine($"{DateTime.Now} Cleaned Log");
+            CleanWriter.WriteLine(new string(c: '-', count: 80));
+            CleanWriter.WriteLine(VersionInfo.GetFormattedInfo());
+            if (Core.ModSettings.preserveFullLog)
+            {
+                FullWriter = new StreamWriter(FullLogFilePath, false);
+                FullWriter.AutoFlush = true;
+                FullWriter.WriteLine($"{DateTime.Now} Full Log");
+                FullWriter.WriteLine(new string(c: '-', count: 80));
+                FullWriter.WriteLine(VersionInfo.GetFormattedInfo());
+            }
         }
 
         public static void Error(Exception ex)
         {
-            writer.WriteLine($"Message: {ex.Message}");
-            writer.WriteLine($"StackTrace: {ex.StackTrace}");
-            writer.WriteLine($"Date: {DateTime.Now}");
-            writer.WriteLine(new string(c: '-', count: 80));
+            CleanWriter.WriteLine($"Message: {ex.Message}");
+            CleanWriter.WriteLine($"StackTrace: {ex.StackTrace}");
+            CleanWriter.WriteLine($"Date: {DateTime.Now}");
+            CleanWriter.WriteLine(new string(c: '-', count: 80));
+        }
+
+        public static void Full(String line)
+        {
+            FullWriter.WriteLine($"{DateTime.Now.ToString("s")} - {line}");
         }
 
         public static void Debug(String line)
         {
-            writer.WriteLine($"{DateTime.Now.ToString("s")} - {line}");
+            CleanWriter.WriteLine($"{DateTime.Now.ToString("s")} - {line}");
         }
     }
 }

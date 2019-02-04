@@ -28,11 +28,14 @@ namespace FuckYouLogShit
                 ModSettings = new Settings();
             }
             ModDirectory = directory;
-            Logger.InitDebugFile();
+            Logger.InitDebugFiles();
+
             var harmony = HarmonyInstance.Create(ModId);
             harmony.PatchAll(Assembly.GetExecutingAssembly());
-            var fuck = AccessTools.Inner(typeof(HBS.Logging.Logger), "LogImpl");
-            var you = AccessTools.Method(fuck, "LogAtLevel", new Type[]
+
+            // patch manually because of internal classes
+            var logImplemntation = AccessTools.Inner(typeof(HBS.Logging.Logger), "LogImpl");
+            var original = AccessTools.Method(logImplemntation, "LogAtLevel", new Type[]
             {
                 typeof(HBS.Logging.LogLevel),
                 typeof(object),
@@ -40,39 +43,25 @@ namespace FuckYouLogShit
                 typeof(Exception),
                 typeof(HBS.Logging.IStackTrace)
             });
-            var man = typeof(LogAtLevelAttacher).GetMethod(nameof(LogAtLevelAttacher.Prefix));
-            harmony.Patch(you, new HarmonyMethod(man));
+            var prefixMethod = typeof(LogAtLevelAttacher).GetMethod(nameof(LogAtLevelAttacher.Prefix));
+            harmony.Patch(original, new HarmonyMethod(prefixMethod));
         }
     }
 
-//    [HarmonyPatch(typeof(HBS.Logging.Logger.LogImpl), "LogAtLevel", new Type[]
-//    {
-//        typeof(HBS.Logging.LogLevel),
-//        typeof(object),
-//        typeof(UnityEngine.Object),
-//        typeof(Exception),
-//        typeof(HBS.Logging.IStackTrace)
-//    })]
-    static class LogAtLevelAttacher
+    public static class LogAtLevelAttacher
     {
-        private static bool HaveLoggedDebugMessage = false;
         private static FormatHelper FormatHelper = new FormatHelper();
-
+        private static String loggerName = "FYLS";
         public static bool Prefix(HBS.Logging.LogLevel level, object message, UnityEngine.Object context, Exception exception, HBS.Logging.IStackTrace location)
         {
-            if (!HaveLoggedDebugMessage)
-            {
-                Logger.Debug("Logging from LogAtLevel");
-                HaveLoggedDebugMessage = true;
-            }
+            var logString = FormatHelper.FormatMessage(loggerName, level, message, exception, location);
+            if (Core.ModSettings.preserveFullLog) Logger.Full(logString);
 
-            var logString = FormatHelper.FormatMessage("FYLS", level, message, exception, location);
             for (var i = 0; i < Core.ModSettings.PrefixesToIgnore.Length; i++)
             {
                 var prefix = Core.ModSettings.PrefixesToIgnore[i];
                 if (logString.StartsWith(prefix)) return false;
             }
-
             Logger.Debug(logString);
             return false;
         }
@@ -93,23 +82,8 @@ namespace FuckYouLogShit
     [HarmonyPatch(typeof(HBS.Logging.Logger), "HandleUnityLog", MethodType.Normal)]
     public static class LogAttacher
     {
-        //private static bool HaveLoggedDebugMessage = false;
-
-        static bool Prefix(string logString, string stackTrace, LogType type)
+        public static bool Prefix(string logString, string stackTrace, LogType type)
         {
-//            for (var i = 0; i < Core.ModSettings.PrefixesToIgnore.Length; i++)
-//            {
-//                var prefix = Core.ModSettings.PrefixesToIgnore[i];
-//                if (logString.StartsWith(prefix)) return false;
-//            }
-//
-//            Logger.Debug($"{type.ToString()} - {logString}");
-//            if ((type == LogType.Error || type == LogType.Exception) &&
-//                !string.IsNullOrEmpty(stackTrace))
-//            {
-//                Logger.Debug(stackTrace);
-//            }
-
             return false;
         }
     }
@@ -128,11 +102,11 @@ namespace FuckYouLogShit
         }
 
         static Dictionary<LogType, LogLevel> lmap = new Dictionary<LogType, LogLevel> {
-            { LogType.Log, LogLevel.Log},
-            { LogType.Assert, LogLevel.Log },
-            { LogType.Warning, LogLevel.Warning },
-            { LogType.Error, LogLevel.Error },
-            { LogType.Exception, LogLevel.Error }
+            {LogType.Log, LogLevel.Log},
+            {LogType.Assert, LogLevel.Log},
+            {LogType.Warning, LogLevel.Warning},
+            {LogType.Error, LogLevel.Error},
+            {LogType.Exception, LogLevel.Error}
         };
         public void LogFormat(LogType logType, UnityEngine.Object context, string format, params object[] args)
         {

@@ -2,7 +2,7 @@
   "Name": "FuckYouLogShit",
   "Enabled": true,
 
-  "Version": "1.1.0",
+  "Version": "1.2.0",
 
   "Author": "janxious",
   "Website": "https://github.com/janxious/FuckYouLogShit",
@@ -14,7 +14,8 @@
 
   "Settings": {
     "PrefixesToIgnore": [
-      "CustomComponents [LOG]"
-    ]
+      "FYLS [LOG] SystemInfo."
+    ],
+    "preserveFullLog": true
   }
 }

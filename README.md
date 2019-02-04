@@ -2,9 +2,9 @@
 
 "F*#% Your Log S&^$" is a mod to clean up the unity logs from HBS's BattleTech game. It is aimed primarily at mod developers(' sanity) and is a part of [RogueTech](https://www.nexusmods.com/battletech/mods/79).
 
-Instead of digging for the Unity log (especially on mac/linux), this puts a new file directly in your mods directory called `cleaned_output_log.txt`. Also it adds timestamps to the logging as well as the logger level.
+Instead of digging for the Unity log (especially on mac/linux), this puts a new file directly in your mods directory called `cleaned_output_log.txt`. Also it adds timestamps to the logging as well as the logger level. It will also halt logging to the normal output log and put a raw log out in the mods folder.
 
-Uses  [BTML](https://github.com/janxious/BattleTechModLoader) and [ModTek](https://github.com/janxious/ModTek).
+Uses  [ModTek](https://github.com/BattletechModders/ModTek)
 
 ## Why
 
@@ -13,6 +13,8 @@ The primary reason I wrote this is the unity logs for the game are full of spam.
 ```
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 ```
+
+Flipping 2009!!@#! A decade-old bug.
 
 ### Demo
 
@@ -36,22 +38,21 @@ Counted 8 save slots
 New:
 
 ```
-2018-10-03T20:11:52 - Log - Using Wide Video for Background
-2018-10-03T20:11:52 - Log - Counted 3 save slots
-2018-10-03T20:11:52 - Log - Counted 8 save slots
+2018-10-03T20:11:52 FYLS [Log] - Using Wide Video for Background
+2018-10-03T20:11:52 FYLS [Log] - Counted 3 save slots
+2018-10-03T20:11:52 FYLS [Log] - Counted 8 save slots
 ```
 
 ### Options
 
-In [`mod.json`](mod.json), you can enter prefix strings that will not be logged in the new log with the option `PrefixesToIgnore`. By default some of CustomComponents logging is ignored.
+In [`mod.json`](mod.json), you can enter prefix strings that will not be logged in the new log with the option `PrefixesToIgnore`. By default a set of info that identifies a computer's capabilities ignored. The prefix entry for that looks like `FYLS [LOG] SystemInfo.`.
 
-### Caveats
+Another option is `preserveFullLogging`. If this is enabled then an additional file will be created in your Mods folder: `output_log.txt`. It will be similar to what the vanilla game logs in full but without some of the annoying shit, and with timestamps.
 
-The logging code for this lives inside the game code so it misses two kinds of logging:
+### Special Super Thanks!
 
-1. This will not capture the very first parts of the unity log from game startup. If there is an error there you will still need to dig for the log.
-2. This will not capture the very end of output from segfault and other crash-to-desktop errors.
-
+@m22spencer for some extra good logging code and PR
+@LadyAlekto for putting the mod through its paces
 
 ### LICENSE
 
