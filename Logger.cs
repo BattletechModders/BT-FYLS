@@ -39,12 +39,12 @@ namespace FuckYouLogShit
 
         public static void Full(String line)
         {
-            FullWriter.WriteLine($"{DateTime.Now.ToString("s")} - {line}");
+            FullWriter.WriteLine($"{DateTime.Now.ToString("s")} {line}");
         }
 
         public static void Debug(String line)
         {
-            CleanWriter.WriteLine($"{DateTime.Now.ToString("s")} - {line}");
+            CleanWriter.WriteLine($"{DateTime.Now.ToString("s")} {line}");
         }
     }
 }
