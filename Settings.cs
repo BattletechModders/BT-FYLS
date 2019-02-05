@@ -1,4 +1,4 @@
-namespace FuckYouLogShit
+namespace BattletechLogCleaner
 {
     public class Settings
     {

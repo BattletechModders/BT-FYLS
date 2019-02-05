@@ -1,14 +1,14 @@
 {
-  "Name": "FuckYouLogShit",
+  "Name": "BattletechLogCleaner",
   "Enabled": true,
 
-  "Version": "1.2.1",
+  "Version": "1.3.0",
 
   "Author": "janxious",
-  "Website": "https://github.com/janxious/FuckYouLogShit",
+  "Website": "https://github.com/janxious/BT-FYLS",
 
-  "DLL": "FuckYouLogShit.dll",
-  "DLLEntryPoint": "FuckYouLogShit.Core.Init",
+  "DLL": "BattletechLogCleaner.dll",
+  "DLLEntryPoint": "BattletechLogCleaner.Core.Init",
   "DependsOn": [],
   "ConflictsWith": [],
 

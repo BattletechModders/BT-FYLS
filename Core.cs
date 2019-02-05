@@ -6,12 +6,12 @@ using Newtonsoft.Json;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace FuckYouLogShit
+namespace BattletechLogCleaner
 {
     public class Core
     {
-        public const string ModName = "FuckYouLogShit";
-        public const string ModId   = "com.joelmeador.FuckYouLogShit";
+        public const string ModName = "BattletechLogCleaner";
+        public const string ModId   = "com.joelmeador.BattletechLogCleaner";
 
         internal static Settings ModSettings = new Settings();
         internal static string ModDirectory;

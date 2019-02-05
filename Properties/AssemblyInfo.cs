@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FuckYouLogShit")]
+[assembly: AssemblyTitle("BattletechLogCleaner")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FuckYouLogShit")]
+[assembly: AssemblyProduct("BattletechLogCleaner")]
 [assembly: AssemblyCopyright("Copyright © Joel Meador 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

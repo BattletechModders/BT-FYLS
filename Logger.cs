@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Harmony;
 
-namespace FuckYouLogShit
+namespace BattletechLogCleaner
 {
     public static class Logger
     {

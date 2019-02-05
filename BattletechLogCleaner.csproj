@@ -7,8 +7,8 @@
     <ProjectGuid>{EAB3F72E-BC74-4966-BAAA-97B1E5695091}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FuckYouLogShit</RootNamespace>
-    <AssemblyName>FuckYouLogShit</AssemblyName>
+    <RootNamespace>BattletechLogCleaner</RootNamespace>
+    <AssemblyName>BattletechLogCleaner</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
