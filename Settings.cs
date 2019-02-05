@@ -1,4 +1,4 @@
-namespace BattletechLogCleaner
+namespace FYLS
 {
     public class Settings
     {

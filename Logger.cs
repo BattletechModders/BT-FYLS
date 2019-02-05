@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Harmony;
 
-namespace BattletechLogCleaner
+namespace FYLS
 {
     public static class Logger
     {
