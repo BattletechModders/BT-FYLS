@@ -5,6 +5,7 @@ using HBS.Logging;
 using Newtonsoft.Json;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace FYLS
 {
@@ -15,6 +16,7 @@ namespace FYLS
 
         internal static Settings ModSettings = new Settings();
         internal static string ModDirectory;
+        internal static Regex LogPrefixesMatcher;
 
         public static void Init(string directory, string settingsJson)
         {
@@ -28,6 +30,10 @@ namespace FYLS
                 ModSettings = new Settings();
             }
             ModDirectory = directory;
+            var escapedIgnoredPrefixes = ModSettings.PrefixesToIgnore.Select(x => Regex.Escape(x));
+            var ignoredPrefixesPattern = $"^(?:{string.Join("|", escapedIgnoredPrefixes.ToArray())})";
+            LogPrefixesMatcher = new Regex(ignoredPrefixesPattern);
+
             Logger.InitDebugFiles();
 
             var harmony = HarmonyInstance.Create(ModId);
@@ -57,12 +63,9 @@ namespace FYLS
             var logString = FormatHelper.FormatMessage(loggerName, level, message, exception, location);
             if (Core.ModSettings.preserveFullLog) Logger.Full(logString);
 
-            for (var i = 0; i < Core.ModSettings.PrefixesToIgnore.Length; i++)
-            {
-                var prefix = Core.ModSettings.PrefixesToIgnore[i];
-                if (logString.StartsWith(prefix)) return false;
+            if (!Core.LogPrefixesMatcher.IsMatch(logString)) {
+               Logger.Debug(logString);
             }
-            Logger.Debug(logString);
             return false;
         }
     }
