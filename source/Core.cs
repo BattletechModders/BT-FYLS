@@ -12,10 +12,9 @@ namespace FYLS
 {
     public class Core
     {
-        public const string ModName = "FYLS";
-        public const string ModId   = "com.joelmeador.FYLS";
+        public const string ModId = "com.joelmeador.FYLS";
 
-        internal static Settings ModSettings = new Settings();
+        internal static Settings ModSettings = new();
         internal static string ModDirectory;
         internal static Regex LogPrefixesMatcher;
 
@@ -41,8 +40,8 @@ namespace FYLS
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             // patch manually because of internal classes
-            var logImplemntation = AccessTools.Inner(typeof(HBS.Logging.Logger), "LogImpl");
-            var original = AccessTools.Method(logImplemntation, "LogAtLevel", new Type[]
+            var logImpl = AccessTools.Inner(typeof(HBS.Logging.Logger), "LogImpl");
+            var original = AccessTools.Method(logImpl, "LogAtLevel", new[]
             {
                 typeof(HBS.Logging.LogLevel),
                 typeof(object),
@@ -57,17 +56,20 @@ namespace FYLS
 
     public static class LogAtLevelAttacher
     {
-        private static FormatHelper FormatHelper = new FormatHelper();
-        private static String loggerName = "FYLS";
-        public static bool Prefix(HBS.Logging.LogLevel level, object message, UnityEngine.Object context, Exception exception, HBS.Logging.IStackTrace location)
+        private static readonly FormatHelper FormatHelper = new();
+        public static bool Prefix(string ___name, HBS.Logging.LogLevel level, object message, Exception exception, HBS.Logging.IStackTrace location)
         {
-            var logString = FormatHelper.FormatMessage(loggerName, level, message, exception, location);
-            if (Core.ModSettings.preserveFullLog) Logger.Full(logString);
+            var logString = FormatHelper.FormatMessage(___name, level, message, exception, location);
+            if (Core.ModSettings.preserveFullLog)
+            {
+                Logger.Full(logString);
+            }
 
-            if (!Core.LogPrefixesMatcher.IsMatch(logString)) {
+            if (!Core.LogPrefixesMatcher.IsMatch(logString))
+            {
                Logger.Debug(logString);
             }
-            return false;
+            return !Core.ModSettings.skipOriginalLoggers;
         }
     }
 
@@ -77,7 +79,7 @@ namespace FYLS
         public static ILogger DebugLog;
         public static bool Prefix(ref ILogger __result)
         {
-            if (DebugLog == null) DebugLog = new UnityEngine.Logger(new LoggerProxy(HBS.Logging.Logger.GetLogger("UnityEngine.Debug")));
+            DebugLog ??= new UnityEngine.Logger(new LoggerProxy(HBS.Logging.Logger.GetLogger("UnityEngine.Debug")));
             __result = DebugLog;
             return false;
         }
@@ -86,7 +88,7 @@ namespace FYLS
     [HarmonyPatch(typeof(HBS.Logging.Logger), "HandleUnityLog", MethodType.Normal)]
     public static class LogAttacher
     {
-        public static bool Prefix(string logString, string stackTrace, LogType type)
+        public static bool Prefix()
         {
             return false;
         }
@@ -105,7 +107,7 @@ namespace FYLS
             hbslog.LogException(exception, context);
         }
 
-        static Dictionary<LogType, LogLevel> lmap = new Dictionary<LogType, LogLevel> {
+        static Dictionary<LogType, LogLevel> lmap = new() {
             {LogType.Log, LogLevel.Log},
             {LogType.Assert, LogLevel.Log},
             {LogType.Warning, LogLevel.Warning},

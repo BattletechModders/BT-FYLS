@@ -16,6 +16,7 @@
     "PrefixesToIgnore": [
       "FYLS [LOG] SystemInfo."
     ],
-    "preserveFullLog": true
+    "preserveFullLog": true,
+    "skipOriginalLoggers": false
   }
 }

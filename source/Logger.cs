@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Harmony;
 
 namespace FYLS
 {
@@ -17,14 +16,14 @@ namespace FYLS
             CleanWriter = new StreamWriter(CleanLogFilePath, false);
             CleanWriter.AutoFlush = true;
             CleanWriter.WriteLine($"{DateTime.Now} Cleaned Log");
-            CleanWriter.WriteLine(new string(c: '-', count: 80));
+            CleanWriter.WriteLine(new string('-', 80));
             CleanWriter.WriteLine(VersionInfo.GetFormattedInfo());
             if (Core.ModSettings.preserveFullLog)
             {
                 FullWriter = new StreamWriter(FullLogFilePath, false);
                 FullWriter.AutoFlush = true;
                 FullWriter.WriteLine($"{DateTime.Now} Full Log");
-                FullWriter.WriteLine(new string(c: '-', count: 80));
+                FullWriter.WriteLine(new string('-', 80));
                 FullWriter.WriteLine(VersionInfo.GetFormattedInfo());
             }
         }
@@ -34,17 +33,17 @@ namespace FYLS
             CleanWriter.WriteLine($"Message: {ex.Message}");
             CleanWriter.WriteLine($"StackTrace: {ex.StackTrace}");
             CleanWriter.WriteLine($"Date: {DateTime.Now}");
-            CleanWriter.WriteLine(new string(c: '-', count: 80));
+            CleanWriter.WriteLine(new string('-', 80));
         }
 
         public static void Full(String line)
         {
-            FullWriter.WriteLine($"{DateTime.Now.ToString("s")} {line}");
+            FullWriter.WriteLine($"{DateTime.Now:s} {line}");
         }
 
         public static void Debug(String line)
         {
-            CleanWriter.WriteLine($"{DateTime.Now.ToString("s")} {line}");
+            CleanWriter.WriteLine($"{DateTime.Now:s} {line}");
         }
     }
 }
