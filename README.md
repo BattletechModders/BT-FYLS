@@ -49,6 +49,10 @@ In [`mod.json`](mod.json), you can enter prefix strings that will not be logged 
 
 Another option is `preserveFullLogging`. If this is enabled then an additional file will be created in your Mods folder: `output_log.txt`. It will be similar to what the vanilla game logs in full but without some of the annoying shit, and with timestamps.
 
+### Setup Development
+
+Copy FYLS.csproj.user.template as FYLS.csproj.user and modify the ReferencePath to point to your Battletech' "Managed" folder that contains all required DLL depednencies.
+
 ### Special Super Thanks!
 
 @m22spencer for some extra good logging code and PR
